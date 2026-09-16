@@ -5,74 +5,327 @@
 
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
 
-  <meta name="theme-color" content="#0f4fa8">
+  <meta name="theme-color" content="#1557C0">
+
+  <meta
+    name="description"
+    content="DMC Student Database - ระบบข้อมูลนักเรียน"
+  >
 
   <title>DMC STUDENT DATABASE</title>
 
   <style>
+    :root {
+      --app-bg: #f4f7fc;
+      --primary: #2563eb;
+      --text: #0f2747;
+      --muted: #7b8ba6;
+    }
+
     * {
       box-sizing: border-box;
     }
 
     html,
     body {
-      width: 100%;
-      height: 100%;
       margin: 0;
       padding: 0;
+
+      width: 100%;
+      height: 100%;
+
       overflow: hidden;
-      background: #f4f7fc;
+
+      background: var(--app-bg);
     }
 
-    #app {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      background: #f4f7fc;
+    body {
+      font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
     }
+
+    /* =========================
+       APP SHELL
+    ========================= */
+
+    #appShell {
+      position: fixed;
+
+      inset: 0;
+
+      width: 100%;
+      height: 100vh;
+
+      overflow: hidden;
+
+      background: var(--app-bg);
+    }
+
+    /* =========================
+       APPS SCRIPT FRAME
+    ========================= */
 
     #dmcFrame {
       position: absolute;
 
-      /* ซ่อนแถบ Google Apps Script ด้านบน */
-      top: -52px;
+      top: 0;
       left: 0;
 
       width: 100%;
-      height: calc(100dvh + 52px);
+      height: 100%;
 
       border: 0;
+
       margin: 0;
       padding: 0;
 
       display: block;
 
-      background: #f4f7fc;
+      background: var(--app-bg);
+
+      opacity: 0;
+
+      transition: opacity .25s ease;
+    }
+
+    #dmcFrame.ready {
+      opacity: 1;
+    }
+
+    /* =========================
+       LOADING SCREEN
+    ========================= */
+
+    #loadingScreen {
+      position: absolute;
+
+      inset: 0;
+
+      z-index: 10;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background:
+        radial-gradient(
+          circle at 50% 40%,
+          rgba(37, 99, 235, .08),
+          transparent 35%
+        ),
+        var(--app-bg);
+
+      transition:
+        opacity .25s ease,
+        visibility .25s ease;
+    }
+
+    #loadingScreen.hide {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loaderBox {
+      text-align: center;
+    }
+
+    .loaderLogo {
+      width: 66px;
+      height: 66px;
+
+      margin: 0 auto 18px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 20px;
+
+      color: #fff;
+
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: .5px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #2563eb,
+          #20a4e8
+        );
+
+      box-shadow:
+        0 18px 45px
+        rgba(37, 99, 235, .22);
+
+      animation:
+        loaderPulse 1.5s ease-in-out infinite;
+    }
+
+    .loaderTitle {
+      color: var(--text);
+
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .loaderText {
+      margin-top: 6px;
+
+      color: var(--muted);
+
+      font-size: 12px;
+    }
+
+    @keyframes loaderPulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.05);
+      }
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @supports (height: 100dvh) {
+      #appShell {
+        height: 100dvh;
+      }
     }
 
     @supports (height: 100svh) {
-      #dmcFrame {
-        height: calc(100svh + 52px);
+      #appShell {
+        height: 100svh;
       }
     }
+
+    @media (max-width: 768px) {
+      #appShell {
+        padding:
+          env(safe-area-inset-top)
+          env(safe-area-inset-right)
+          env(safe-area-inset-bottom)
+          env(safe-area-inset-left);
+      }
+
+      #dmcFrame {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
   </style>
 </head>
 
 <body>
 
-  <div id="app">
+  <main id="appShell">
+
+    <!-- Loading -->
+
+    <div id="loadingScreen">
+
+      <div class="loaderBox">
+
+        <div class="loaderLogo">
+          DMC
+        </div>
+
+        <div class="loaderTitle">
+          DMC STUDENT DATABASE
+        </div>
+
+        <div class="loaderText">
+          กำลังเปิดระบบข้อมูลนักเรียน...
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Apps Script Web App -->
 
     <iframe
       id="dmcFrame"
+
       src="https://script.google.com/macros/s/AKfycbwoyAzTu1UFCTbu2YOzzPkVMfFVWMCIA8CAVv86AvvCAw3EZ9C1fH834QDsdmqjghArMA/exec"
-      allow="clipboard-read; clipboard-write"
-      allowfullscreen>
+
+      title="DMC Student Database"
+
+      allow="
+        clipboard-read;
+        clipboard-write
+      "
+
+      loading="eager"
+
+      referrerpolicy="strict-origin-when-cross-origin">
     </iframe>
 
-  </div>
+  </main>
+
+
+  <script>
+
+    const frame =
+      document.getElementById('dmcFrame');
+
+    const loading =
+      document.getElementById('loadingScreen');
+
+
+    /*
+     * เมื่อ Apps Script โหลดเสร็จ
+     */
+
+    frame.addEventListener(
+      'load',
+      function () {
+
+        frame.classList.add('ready');
+
+        setTimeout(
+          function () {
+
+            loading.classList.add('hide');
+
+          },
+          150
+        );
+
+      }
+    );
+
+
+    /*
+     * กันกรณี Browser load event ช้า
+     */
+
+    setTimeout(
+      function () {
+
+        frame.classList.add('ready');
+
+        loading.classList.add('hide');
+
+      },
+      12000
+    );
+
+  </script>
 
 </body>
 </html>
