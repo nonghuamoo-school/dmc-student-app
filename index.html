@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  >
+
+  <meta name="theme-color" content="#0f4fa8">
+
+  <title>DMC STUDENT DATABASE</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #f4f7fc;
+    }
+
+    #app {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      background: #f4f7fc;
+    }
+
+    #dmcFrame {
+      position: absolute;
+
+      /* ซ่อนแถบ Google Apps Script ด้านบน */
+      top: -52px;
+      left: 0;
+
+      width: 100%;
+      height: calc(100dvh + 52px);
+
+      border: 0;
+      margin: 0;
+      padding: 0;
+
+      display: block;
+
+      background: #f4f7fc;
+    }
+
+    @supports (height: 100svh) {
+      #dmcFrame {
+        height: calc(100svh + 52px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="app">
+
+    <iframe
+      id="dmcFrame"
+      src="https://script.google.com/macros/s/AKfycbwoyAzTu1UFCTbu2YOzzPkVMfFVWMCIA8CAVv86AvvCAw3EZ9C1fH834QDsdmqjghArMA/exec"
+      allow="clipboard-read; clipboard-write"
+      allowfullscreen>
+    </iframe>
+
+  </div>
+
+</body>
+</html>
